@@ -6,6 +6,7 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 def get_word_embedding(preprocessed_text):
     """
+    Refer to https://mccormickml.com/2019/05/14/BERT-word-embeddings-tutorial/
     Get the last 4 layers of 768 hidden states weights and average it to become a 768 vector  
     """
     marked_text = "[CLS] " + " ".join(preprocessed_text) + " [SEP]"
