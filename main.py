@@ -11,9 +11,9 @@ DEFAULT_REPLY = 3
 # database that contains Q&A
 database = read_database()
 
-def display_chatbot_reply(reply):
+def display_chatbot_reply(answer):
     reply = "Chatbot: "
-    reply += colored(reply+"\n","green")
+    reply += colored(answer+"\n","green")
     print(reply)
 
 if __name__ == '__main__':
