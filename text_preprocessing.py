@@ -30,3 +30,6 @@ def get_corpus(df):
     id2word.compactify()
     corpus = [id2word.doc2bow(text) for text in bigram]
     return df,corpus, id2word,bigram
+
+if __name__ == '__main__':
+    df,corpus,id2word,bigram=get_corpus(df)
