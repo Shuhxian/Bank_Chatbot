@@ -40,7 +40,7 @@ trigram = gensim.models.Phrases(bigram[data_words], threshold=100)
 
 # Faster way to get a sentence clubbed as a trigram/bigram
 bigram_mod = gensim.models.phrases.Phraser(bigram)
-trigram_mod = gensim.models.phrases.Phraser(trigram)
+# trigram_mod = gensim.models.phrases.Phraser(trigram)
 
 
 def make_bigrams(texts):
