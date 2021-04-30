@@ -1,11 +1,15 @@
 from termcolor import colored
 from entity_extraction import get_entities
 from text_preprocessing import get_corpus as get_preprocessed_text
+from database_extraction import read_database
 
 # submodule
 GENERAL_INTENT = 1
 FAQS = 2
 DEFAULT_REPLY = 3
+
+# database that contains Q&A
+database = read_database()
 
 def display_chatbot_reply(reply):
     reply = "Chatbot: "
@@ -23,10 +27,8 @@ if __name__ == '__main__':
         # Text Preprocessing
         processed_text = get_preprocessed_text(user_message)
 
-        # Word Embedding
-        # TODO
-
         # LDA + Similarity Matching 
+        # compare with Database
         # TODO
 
         if match_type == GENERAL_INTENT:
