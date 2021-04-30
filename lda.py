@@ -28,20 +28,30 @@ def assign_topic(df):
     return df
 
 if __name__ == '__main__':
+    #Get the optimum number of topics
     num_topics,_ = get_number_topics(corpus,id2word,10)
+    #Assign topics based on optimum number of topics
     lda_model = gensim.models.LdaMulticore(corpus=corpus,
                                            id2word=id2word,
                                            num_topics=num_topics)
     pprint(lda_model.print_topics())
     df=assign_topic(df)
-    sentence_embeddings=df['token'].apply(get_word_embedding)
+    
+    #Get the word embeddings
+    sentence_embeddings=df['token'].apply(get_word_embedding) 
+    
+    #Split the tensor into 768 columns for clustering
     df_new=pd.DataFrame(columns=[i for i in range(768)],index=[i for i in range(df.shape[0])])
     for i in range(df.shape[0]):
         for j in range(768):
             df_new.iloc[i,j]=sentence_embeddings[i][j]
+            
+    #Concat the tensors with the original dataframe       
     df=pd.concat([df,df_new],axis=1)
-    embeddings=df.iloc[:,4:]
+    #Filter out LDA and word embedding
+    embeddings=df.iloc[:,4:] 
 
+    #Clustering, n_neighbours and min_cluster_size can be adjusted according to sample size
     umap_embeddings = umap.UMAP(n_neighbors=5, 
                                 n_components=5, 
                                 metric='cosine').fit_transform(embeddings)
@@ -50,8 +60,8 @@ if __name__ == '__main__':
                             metric='euclidean',                      
                             cluster_selection_method='eom').fit(umap_embeddings)
 
-    # Prepare data
-    umap_data = umap.UMAP(n_neighbors=15, n_components=2, min_dist=0.0, metric='cosine').fit_transform(embeddings)
+    #Create a dataframe with final label and probability
+    umap_data = umap.UMAP(n_neighbors=5, n_components=2, min_dist=0.0, metric='cosine').fit_transform(embeddings)
     result = pd.DataFrame(umap_data, columns=['x', 'y'])
     result['labels'] = cluster.labels_
     result['prob']=cluster.probabilities_
