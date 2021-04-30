@@ -2,7 +2,7 @@ import gensim
 from pprint import pprint
 import umap.umap_ as umap
 import hdbscan
-from word_embedding import get_wod_embedding
+from word_embedding import get_word_embedding
 def get_number_topics(corpus, id2word, bigram, max_topic):
     #Calculate coherence score and determine optimum number of topics
     best_num=-1
