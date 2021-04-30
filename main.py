@@ -1,3 +1,4 @@
+from entity_extraction import get_entities
 
 # submodule
 GENERAL_INTENT = 1
@@ -21,17 +22,17 @@ if __name__ == '__main__':
 
         if match_type == GENERAL_INTENT:
             # Entity Extraction 
-            # TODO
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("NAME", NAME)
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", BANK_ACC)
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", AMOUNT)
-            return highest_confid_lvl_ans
+            entities = get_entities(user_message)
+            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("NAME", entities["PERSON"][0])
+            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", entities["BANK_ACC"][0])
+            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0])
+            print(highest_confid_lvl_ans)
 
         elif match_type == FAQS:
-            return highest_confid_lvl_ans
+            print(highest_confid_lvl_ans)
 
         elif match_type == DEFAULT_REPLY:
-            return highest_confid_lvl_ans
+            print(highest_confid_lvl_ans)
 
     # End of Chatbot
     print("Thank you for using our chatbot.")
