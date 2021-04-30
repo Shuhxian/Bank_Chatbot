@@ -1,7 +1,11 @@
+# import libraries
 from termcolor import colored
+
+# import other files
 from entity_extraction import get_entities
 from text_preprocessing import get_corpus as get_preprocessed_text
 from database_extraction import read_database
+from lda import train_classifier, predict
 
 # submodule
 GENERAL_INTENT = 1
@@ -28,7 +32,6 @@ if __name__ == '__main__':
         processed_text = get_preprocessed_text(user_message)
 
         # LDA + Similarity Matching 
-        # compare with Database
         # TODO
 
         if match_type == GENERAL_INTENT:

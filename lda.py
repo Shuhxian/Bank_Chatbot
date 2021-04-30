@@ -27,8 +27,8 @@ def assign_topic(df):
         df.loc[i,'topic']=sorted(lda_model[corpus[i]],reverse=True,key=lambda x:x[1])[0][0]
         df.loc[i,'topic_probability']=sorted(lda_model[corpus[i]],reverse=True,key=lambda x:x[1])[0][1]
     return df
-
-def train_classifier(df,corpus,id2word,bigram):
+ef train_classifier(df,corpus,id2word,bigram):
+d
     #Get the optimum number of topics
     num_topics,_ = get_number_topics(corpus,id2word,bigram,10)
     #Assign topics based on optimum number of topics
