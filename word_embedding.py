@@ -41,10 +41,10 @@ def get_word_embedding(preprocessed_text):
 
     sentence_embedding = torch.mean(token_embeddings, dim=0)
 
-    return sentence_embedding
+    return sentence_embedding.numpy()
 
 if __name__ == '__main__':
     preprocessed_text = ["hi","how","are","you"]
     word_embedding = get_word_embedding(preprocessed_text)
     # feature vector of 768 for each sentence
-    assert 768 == list(word_embedding.size())[0]
+    assert 768 == word_embedding.shape[0]
