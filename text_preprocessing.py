@@ -58,6 +58,7 @@ def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
     return texts_out
 
 def get_corpus (data):
+  data=list(data.split('         '))
   data_words = list(sent_to_words(data))  
   # Remove Stop Words
   data_words_nostops = remove_stopwords(data_words)
@@ -78,15 +79,12 @@ def get_corpus (data):
 
   #(testing) Human readable format of corpus (term-frequency)
 #   [[(id2word[id], freq) for id, freq in cp] for cp in corpus[:4]]
-  return data_lemmatized
+  op=np.asarray(data_lemmatized[0])
+  return op
 
-def user_input(): 
-  df=input("What can I help you ? :\n")
-  return(list(df.split('       ')))
 
 if __name__ == '__main__':
-    data=user_input()
     #to train
 #     data = df.message.values.tolist()  
-    data_lemmatized=get_corpus(data)
-    op=np.asarray(data_lemmatized[0])
+    get_corpus(data)
+    
