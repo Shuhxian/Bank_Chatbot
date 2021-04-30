@@ -1,5 +1,5 @@
 from entity_extraction import get_entities
-from text_preprocessing import get_corpus
+from text_preprocessing import get_corpus as get_preprocessed_text
 
 # submodule
 GENERAL_INTENT = 1
@@ -15,7 +15,7 @@ if __name__ == '__main__':
             break 
 
         # Text Preprocessing
-        processed_text=get_corpus(user_message)
+        processed_text = get_preprocessed_text(user_message)
 
         # Word Embedding
         # TODO
