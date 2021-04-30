@@ -22,7 +22,7 @@ def get_corpus(df):
     df['token']=df['message'].apply(lambda x:nltk.word_tokenize(x))
     df['token']=df['token'].apply(lambda x: remove_stopwords(x)) 
     df['token']=df['token'].apply(lambda x:lemmatize(x)) 
-    words=data.token.values.tolist() 
+    words=df['token'].values.tolist() 
     bigram_mod = bigrams(words)
     bigram = [bigram_mod[review] for review in words]
     id2word = gensim.corpora.Dictionary(bigram)
