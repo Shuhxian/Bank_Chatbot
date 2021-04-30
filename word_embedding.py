@@ -1,5 +1,6 @@
 import torch
 from transformers import BertTokenizer, BertModel
+from scipy.spatial.distance import cosine
 
 # Load pre-trained model tokenizer (vocabulary)
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
@@ -45,7 +46,10 @@ def get_word_embedding(preprocessed_text):
     return sentence_embedding.numpy()
 
 if __name__ == '__main__':
-    preprocessed_text = ["hi","how","are","you"]
-    word_embedding = get_word_embedding(preprocessed_text)
+    input1 = input("First Sentence")
+    input2 = input("Second Sentence")
+    word_embedding1 = get_word_embedding(input1.split())
+    word_embedding2 = get_word_embedding(input2.split())
     # feature vector of 768 for each sentence
-    assert 768 == word_embedding.shape[0]
+    print('Vector similarity for similar meanings:  %.2f' % cosine(word_embedding1, word_embedding2))
+    
