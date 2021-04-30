@@ -54,4 +54,5 @@ if __name__ == '__main__':
     umap_data = umap.UMAP(n_neighbors=15, n_components=2, min_dist=0.0, metric='cosine').fit_transform(embeddings)
     result = pd.DataFrame(umap_data, columns=['x', 'y'])
     result['labels'] = cluster.labels_
+    result['prob']=cluster.probabilities_
 
