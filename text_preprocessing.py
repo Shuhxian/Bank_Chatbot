@@ -34,20 +34,16 @@ def remove_stopwords(texts):
     stop_words = set(nltk.corpus.stopwords.words("english"))
     return [[word for word in simple_preprocess(str(doc),min_len=0) if word not in stop_words] for doc in texts]
 
-# Build the bigram and trigram models
-bigram = gensim.models.Phrases(data_words, min_count=5, threshold=100) # higher threshold fewer phrases.
-trigram = gensim.models.Phrases(bigram[data_words], threshold=100)  
-
-# Faster way to get a sentence clubbed as a trigram/bigram
-bigram_mod = gensim.models.phrases.Phraser(bigram)
-# trigram_mod = gensim.models.phrases.Phraser(trigram)
-
-
 def make_bigrams(texts):
+# Build the bigram and trigram models
+    bigram = gensim.models.Phrases(texts, min_count=5, threshold=100) # higher threshold fewer phrases.
+    bigram_mod = gensim.models.phrases.Phraser(bigram)
     return [bigram_mod[doc] for doc in texts]
 
-# def make_trigrams(texts):
-#     return [trigram_mod[bigram_mod[doc]] for doc in texts]
+def make_trigrams(texts):
+    trigram = gensim.models.Phrases(bigram[texts], threshold=100)  
+    trigram_mod = gensim.models.phrases.Phraser(trigram)
+    return [trigram_mod[bigram_mod[doc]] for doc in texts]
 
 def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
     lemmatizer = WordNetLemmatizer()
@@ -81,10 +77,3 @@ def get_corpus (data):
 #   [[(id2word[id], freq) for id, freq in cp] for cp in corpus[:4]]
   op=np.asarray(data_lemmatized[0])
   return op
-
-
-if __name__ == '__main__':
-    #to train
-#     data = df.message.values.tolist()  
-    get_corpus(data)
-    
