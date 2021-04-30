@@ -57,8 +57,7 @@ def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
         texts_out.append([token.lemma_ for token in doc if token.pos_ in allowed_postags])
     return texts_out
 
-def get_corpus (df):
-  data = df.message.values.tolist()
+def get_corpus (data):
   data_words = list(sent_to_words(data))  
   # Remove Stop Words
   data_words_nostops = remove_stopwords(data_words)
@@ -81,6 +80,12 @@ def get_corpus (df):
 #   [[(id2word[id], freq) for id, freq in cp] for cp in corpus[:4]]
   return df,corpus,id2word,data_words_bigrams
 
+def user_input(): 
+  df=input("What can I help you ? :\n")
+  return(list(df.split('       ')))
 
 if __name__ == '__main__':
-    df,corpus,id2word,bigram=get_corpus(df)
+    data=user_input()
+    #to train
+#     data = df.message.values.tolist()  
+    df,corpus,id2word,bigram=get_corpus(data)
