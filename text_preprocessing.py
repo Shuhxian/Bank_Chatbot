@@ -7,7 +7,6 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
 from nltk.tokenize import word_tokenize
-# from pprint import pprint
 
 # Gensim
 import gensim
@@ -29,8 +28,6 @@ nlp = spacy.load('en', disable=['parser', 'ner'])
 def sent_to_words(sentences):
     return([word_tokenize(sentence) for sentence in sentences])
 
-# data_words = list(sent_to_words(data)) 
-
 # Define functions for stopwords, bigrams, trigrams and lemmatization
 # remove stopwords and tokenizing
 def remove_stopwords(texts):
@@ -49,8 +46,8 @@ trigram_mod = gensim.models.phrases.Phraser(trigram)
 def make_bigrams(texts):
     return [bigram_mod[doc] for doc in texts]
 
-def make_trigrams(texts):
-    return [trigram_mod[bigram_mod[doc]] for doc in texts]
+# def make_trigrams(texts):
+#     return [trigram_mod[bigram_mod[doc]] for doc in texts]
 
 def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
     lemmatizer = WordNetLemmatizer()
@@ -59,6 +56,7 @@ def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
         doc = nlp(" ".join(sent)) 
         texts_out.append([token.lemma_ for token in doc if token.pos_ in allowed_postags])
     return texts_out
+
 def get_corpus (df):
   data = df.message.values.tolist()
   data_words = list(sent_to_words(data))  
@@ -80,7 +78,7 @@ def get_corpus (df):
   corpus = [id2word.doc2bow(text) for text in texts]
 
   #(testing) Human readable format of corpus (term-frequency)
-  [[(id2word[id], freq) for id, freq in cp] for cp in corpus[:4]]
+#   [[(id2word[id], freq) for id, freq in cp] for cp in corpus[:4]]
   return df,corpus,id2word,data_words_bigrams
 
 
