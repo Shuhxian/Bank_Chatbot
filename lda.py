@@ -27,8 +27,8 @@ def assign_topic(df):
         df.loc[i,'topic']=sorted(lda_model[corpus[i]],reverse=True,key=lambda x:x[1])[0][0]
         df.loc[i,'topic_probability']=sorted(lda_model[corpus[i]],reverse=True,key=lambda x:x[1])[0][1]
     return df
-ef train_classifier(df,corpus,id2word,bigram):
-d
+
+def train_classifier(df,corpus,id2word,bigram):
     #Get the optimum number of topics
     num_topics,_ = get_number_topics(corpus,id2word,bigram,10)
     #Assign topics based on optimum number of topics
@@ -49,7 +49,7 @@ d
     #Concat the tensors with the original dataframe       
     df=pd.concat([df,df_new],axis=1)
     #Filter out LDA and word embedding
-    embeddings=df.iloc[:,4:] 
+    embeddings=df.iloc[:,2:] 
 
     #Clustering, n_neighbours and min_cluster_size can be adjusted according to sample size
     reducer=umap.UMAP(n_neighbors=5, 
@@ -70,7 +70,7 @@ d
     
 def predict(input_token,input_corpus,lda_model,reducer,cluster):
     df=pd.DataFrame([input_token,input_corpus],columns={'token','corpus'})
-    #Assign topics based on optimum number of topics
+    #Assign topic based on previous LDA model
     df[0,'topic']=sorted(lda_model[input_corpus],reverse=True,key=lambda x:x[1])[0][0]
     df[0,'topic_probability']=sorted(lda_model[input_corpus],reverse=True,key=lambda x:x[1])[0][1]
     
@@ -79,14 +79,13 @@ def predict(input_token,input_corpus,lda_model,reducer,cluster):
     
     #Split the tensor into 768 columns for clustering
     df_new=pd.DataFrame(columns=[i for i in range(768)],index=[0])
-    for i in range(df.shape[0]):
-        for j in range(768):
-            df_new.iloc[i,j]=sentence_embeddings[i][j]
+    for j in range(768):
+        df_new.iloc[0,j]=sentence_embeddings[j]
             
     #Concat the tensors with the original dataframe       
     df=pd.concat([df,df_new],axis=1)
     #Filter out LDA and word embedding
-    embeddings=df.iloc[:,4:] 
+    embeddings=df.iloc[:,2:] 
     chat_embeddings=embeddings.iloc[0,:][None,:]
     test_data = reducer.transform(chat_embeddings)
     test_labels, test_prob = hdbscan.approximate_predict(cluster, test_data)
