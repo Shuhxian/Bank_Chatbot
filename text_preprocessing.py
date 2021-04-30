@@ -78,7 +78,7 @@ def get_corpus (data):
 
   #(testing) Human readable format of corpus (term-frequency)
 #   [[(id2word[id], freq) for id, freq in cp] for cp in corpus[:4]]
-  return df,corpus,id2word,data_words_bigrams
+  return data_lemmatized
 
 def user_input(): 
   df=input("What can I help you ? :\n")
@@ -88,4 +88,5 @@ if __name__ == '__main__':
     data=user_input()
     #to train
 #     data = df.message.values.tolist()  
-    df,corpus,id2word,bigram=get_corpus(data)
+    data_lemmatized=get_corpus(data)
+    op=np.asarray(data_lemmatized[0])
