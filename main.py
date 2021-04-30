@@ -6,8 +6,10 @@ FAQS = 2
 DEFAULT_REPLY = 3
 
 if __name__ == '__main__':
+    # Start of Chatbot
+    print("Hi, how can I help you?")
     while True:
-        user_message = input("Hi, how can I help you?")  
+        user_message = input()  
         if user_message == "q":
             break 
 
