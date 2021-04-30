@@ -29,4 +29,4 @@ def get_corpus(df):
     id2word.filter_extremes(no_below=10, no_above=0.35)
     id2word.compactify()
     corpus = [id2word.doc2bow(text) for text in bigram]
-    return df,corpus, id2word
+    return df,corpus, id2word,bigram
