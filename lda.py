@@ -1,6 +1,7 @@
 import gensim
 from pprint import pprint
-
+import umap.umap_ as umap
+import hdbscan
 def get_number_topics(corpus, id2word, max_topic):
     #Calculate coherence score and determine optimum number of topics
     best_num=-1
@@ -33,3 +34,24 @@ if __name__ == '__main__':
                                            num_topics=num_topics)
     pprint(lda_model.print_topics())
     df=assign_topic(df)
+    sentence_embeddings=df['token'].apply(get_word_embedding)
+    df_new=pd.DataFrame(columns=[i for i in range(768)],index=[i for i in range(df.shape[0])])
+    for i in range(df.shape[0]):
+        for j in range(768):
+            df_new.iloc[i,j]=sentence_embeddings[i][j]
+    df=pd.concat([df,df_new],axis=1)
+    embeddings=df.iloc[:,4:]
+
+    umap_embeddings = umap.UMAP(n_neighbors=5, 
+                                n_components=5, 
+                                metric='cosine').fit_transform(embeddings)
+
+    cluster = hdbscan.HDBSCAN(min_cluster_size=5,
+                            metric='euclidean',                      
+                            cluster_selection_method='eom').fit(umap_embeddings)
+
+    # Prepare data
+    umap_data = umap.UMAP(n_neighbors=15, n_components=2, min_dist=0.0, metric='cosine').fit_transform(embeddings)
+    result = pd.DataFrame(umap_data, columns=['x', 'y'])
+    result['labels'] = cluster.labels_
+
