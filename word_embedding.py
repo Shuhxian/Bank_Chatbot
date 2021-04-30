@@ -46,10 +46,9 @@ def get_word_embedding(preprocessed_text):
     return sentence_embedding.numpy()
 
 if __name__ == '__main__':
-    input1 = input("First Sentence")
-    input2 = input("Second Sentence")
+    input1 = input("First Sentence: ")
+    input2 = input("Second Sentence: ")
     word_embedding1 = get_word_embedding(input1.split())
     word_embedding2 = get_word_embedding(input2.split())
     # feature vector of 768 for each sentence
     print('Vector similarity for similar meanings:  %.2f' % cosine(word_embedding1, word_embedding2))
-    
