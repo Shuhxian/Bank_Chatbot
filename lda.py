@@ -85,7 +85,7 @@ def predict(input_token,input_corpus,lda_model,reducer,cluster):
     #Concat the tensors with the original dataframe       
     df=pd.concat([df,df_new],axis=1)
     #Filter out LDA and word embedding
-    embeddings=df.iloc[:,2:] 
+    embeddings=df.iloc[:,4:] 
     chat_embeddings=embeddings.iloc[0,:][None,:]
     test_data = reducer.transform(chat_embeddings)
     test_labels, test_prob = hdbscan.approximate_predict(cluster, test_data)
