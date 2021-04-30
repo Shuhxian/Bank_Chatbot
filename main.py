@@ -18,7 +18,7 @@ def display_chatbot_reply(answer):
 
 if __name__ == '__main__':
     # Start of Chatbot
-    display_chatbot_reply("Hi, how can I help you? \n")
+    display_chatbot_reply("Hi, how can I help you?")
     while True:
         user_message = input()  
         if user_message == "q":
