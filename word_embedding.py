@@ -1,6 +1,6 @@
 import torch
 from transformers import BertTokenizer, BertModel
-from scipy.spatial.distance import cosine
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Load pre-trained model tokenizer (vocabulary)
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
@@ -51,4 +51,4 @@ if __name__ == '__main__':
     word_embedding1 = get_word_embedding(input1.split())
     word_embedding2 = get_word_embedding(input2.split())
     # feature vector of 768 for each sentence
-    print('Vector similarity for similar meanings:  %.2f' % cosine(word_embedding1, word_embedding2))
+    print('Vector similarity for similar meanings:  %.2f' % cosine_similarity(word_embedding1, word_embedding2))
