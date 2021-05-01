@@ -10,32 +10,14 @@ import hdbscan
 import pickle
 from pprint import pprint
 from word_embedding import get_word_embedding
+from text_preprocessing import sent_to_words,remove_stopwords,make_bigrams
+nlp = spacy.load('en', disable=['parser', 'ner'])
 
-def lemmatize(x): 
-    lemmatizer = nltk.stem.WordNetLemmatizer()
-    return [lemmatizer.lemmatize(word) for word in x]
-
-def remove_stopwords(x):
-    stopwords = nltk.corpus.stopwords.words('english')
-    return [token for token in x if not token in stopwords]
-
-def bigrams(words, bi_min=15):
-    bigram = gensim.models.Phrases(words, min_count = bi_min)
-    bigram_mod = gensim.models.phrases.Phraser(bigram)
-    return bigram_mod
-
-def get_corpus(df):
-    df['message']=df['message'].map(lambda x: re.sub("[,\.!'?]", '', x)).str.lower()
-    df['token']=df['message'].apply(nltk.word_tokenize)
-    df['token']=df['token'].apply(remove_stopwords) 
-    df['token']=df['token'].apply(lemmatize) 
-    words=df.token.values.tolist() 
-    bigram_mod = bigrams(words)
-    bigram = [bigram_mod[review] for review in words]
-    id2word = gensim.corpora.Dictionary(bigram)
-    id2word.compactify()
-    corpus = [id2word.doc2bow(text) for text in bigram]
-    return df,corpus, id2word, bigram
+def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
+    lemmatizer = WordNetLemmatizer()
+    for sent in texts:
+        doc = nlp(" ".join(sent)) 
+        return ([token.lemma_ for token in doc if token.pos_ in allowed_postags])
 
 def get_number_topics(corpus, id2word, bigram, max_topic):
     #Calculate coherence score and determine optimum number of topics
@@ -63,9 +45,18 @@ def assign_topic(df,lda_model,corpus):
     return df
 
 def train_classifier():
-  df = pd.read_csv("Book1.csv")
-
-  df,corpus,id2word, bigram=get_corpus(df)
+  #uploaded = files.upload()
+  #filename = "Book1.csv"
+  #df = pd.read_csv(io.StringIO(uploaded[filename].decode("utf-8")))
+  df=pd.read_csv("Book1.csv")
+  df['message']=df['message'].apply(lambda x: list(x.split('         ')))
+  df['token']=df['message'].apply(sent_to_words)
+  df['token']=df['message'].apply(remove_stopwords) 
+  df['token']=df['token'].apply(lemmatization) 
+  texts=df.token.values
+  bigram = make_bigrams(texts)
+  id2word = gensim.corpora.Dictionary(bigram)
+  corpus = [id2word.doc2bow(text) for text in bigram]
 
   num_topics,_ = get_number_topics(corpus,id2word,bigram,15)
   lda_model = gensim.models.LdaMulticore(corpus=corpus,
@@ -115,7 +106,15 @@ def predict(input_string):
     cluster = pickle.load((open('cluster.sav', 'rb')))
 
     df2=pd.DataFrame([input_string],columns={'message'})
-    df2,corpus2,_,_=get_corpus(df2)
+    df2['message']=df2['message'].apply(lambda x: list(x.split('         ')))
+    df2['token']=df2['message'].apply(sent_to_words)
+    df2['token']=df2['message'].apply(remove_stopwords) 
+    df2['token']=df2['token'].apply(lemmatization) 
+    texts2=df2.token.values
+    bigram2 = make_bigrams(texts2)
+    id2word2 = gensim.corpora.Dictionary(bigram2)
+    id2word2.compactify()
+    corpus2 = [id2word2.doc2bow(text) for text in bigram2]
     #Assign topics based on optimum number of topics
     df2[0,'topic']=sorted(lda_model[corpus2[0]],reverse=True,key=lambda x:x[1])[0][0]
     df2[0,'topic_probability']=sorted(lda_model[corpus2[0]],reverse=True,key=lambda x:x[1])[0][1]
