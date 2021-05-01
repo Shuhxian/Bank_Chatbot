@@ -66,6 +66,7 @@ if __name__ == '__main__':
     parser.add_argument('--default_reply_thres', type=float, required=True)
     args = parser.parse_args()
     if args.logging:
+        logging.basicConfig(level=logging.INFO)
         logger.setLevel(logging.INFO)
 
     # Start of Chatbot
