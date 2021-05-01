@@ -46,7 +46,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
     if max_similarity >= default_reply_thres:
         return max_submodule, max_answer
     else:
-        return DEFAULT_REPLY, default_reply
+        return DEFAULT_REPLY, default_reply["answer"]
 
 
 if __name__ == '__main__':
