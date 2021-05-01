@@ -8,5 +8,5 @@ def read_database():
     return df1, df2, df3
 
 if __name__ == '__main__':
-    read_database()
-#print(f"1: {df} \n2: {df2} \n3: {df3} ")
+    df1, df2, df3 = read_database()
+    print(f"1: {df1} \n2: {df2} \n3: {df3} ")
