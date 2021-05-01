@@ -102,7 +102,7 @@ if __name__ == '__main__':
             # Entity Extraction 
             entities = get_entities(user_message)
             logger.info("Entities Extracted: "+str(entities))
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("NAME", entities["PERSON"][0])
+            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0])
             highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", entities["BANK_ACC"][0])
             highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0])
             display_chatbot_reply(highest_confid_lvl_ans)
