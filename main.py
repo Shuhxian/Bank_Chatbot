@@ -34,7 +34,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
     max_submodule = 0
     max_answer = ""
     for submodule, candidate_questions in enumerate(candidates_submodules):
-        for question, answer in candidate_questions:
+        for question, answer in candidate_questions.items():
             # the cosine formula in scipy is [1 - (u.v / (||u||*||v||))]
             # so we have to add 1 - consine() to become the similary match instead of difference match 
             similarity = 1 - cosine(user_message_embedding, get_word_embedding_func(question))
