@@ -17,7 +17,7 @@ database = read_database()
 
 def display_chatbot_reply(answer):
     reply = "Chatbot: "
-    reply += colored(answer+"\n","green")
+    reply += colored(answer,"green")
     print(reply)
 
 if __name__ == '__main__':

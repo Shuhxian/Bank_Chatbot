@@ -1,2 +1,4 @@
 transformers
 termcolor
+umap-learn
+hdbscan
