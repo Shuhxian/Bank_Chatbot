@@ -1,5 +1,7 @@
 # import libraries
 from termcolor import colored
+import logging
+import argparse
 
 # import other files
 from entity_extraction import get_entities
@@ -32,6 +34,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
     user_message_embedding = get_word_embedding_func(preprocessed_user_message)
     max_similarity = 0
     max_submodule = 0
+    max_question = ""
     max_answer = ""
     for submodule, candidate_questions in enumerate(candidates_submodules):
         for question, answer in candidate_questions.items():
@@ -39,17 +42,29 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
             # so we have to add 1 - consine() to become the similary match instead of difference match 
             similarity = 1 - cosine(user_message_embedding, get_word_embedding_func(question))
             if similarity > max_similarity:
-                max_similarity, max_answer, max_submodule = similarity, answer, submodule + 1
+                max_similarity, max_question, max_answer, max_submodule = similarity, question, answer, submodule + 1
+
+
+    logging.info("Highest Matched Submodule:", max_submodule)
+    logging.info("Highest Similarity Score:", max_similarity)
+    logging.info("Highest Confidence Level Question:", max_question)
+    logging.info("Highest Confidence Level Answer:", max_answer)
 
     # if the highest similarity is lower the predefined threshold
     # default reply will be sent back to the user
     if max_similarity >= default_reply_thres:
-        return max_submodule, max_answer
+        return max_similarity, max_submodule, max_question, max_answer["answer"]
     else:
-        return DEFAULT_REPLY, default_reply["answer"]
+        return max_similarity, DEFAULT_REPLY, max_question, default_reply["answer"]
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--logging', action='store_true')
+    args = parser.parse_args()
+    if args.logging:
+        logging.basicConfig(level=logging.INFO)
+        
     # Start of Chatbot
     display_chatbot_reply("Hi, how can I help you?")
     while True:
@@ -59,17 +74,19 @@ if __name__ == '__main__':
 
         # Text Preprocessing
         preprocessed_user_message = get_preprocessed_text(user_message)
+        logging.info("Preprocessed User Message:",preprocessed_user_message)
 
         # LDA + Clustering
         # TODO
 
         # Similarity Matching 
-        # can replace database to candidate_database after LDA + Clustering
-        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"])
+        # can replace database to candidate_database after LDA + Clustering(TODO)
+        max_similarity, matched_submodule, highest_confid_lvl_ques, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"])
 
         if matched_submodule == GENERAL_INTENT:
             # Entity Extraction 
             entities = get_entities(user_message)
+            logging.info("Entities Extracted:",entities)
             highest_confid_lvl_ans = highest_confid_lvl_ans.replace("NAME", entities["PERSON"][0])
             highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", entities["BANK_ACC"][0])
             highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0])
