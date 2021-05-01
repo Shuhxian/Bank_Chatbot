@@ -52,4 +52,4 @@ if __name__ == '__main__':
     word_embedding1 = get_word_embedding(input1.split())
     word_embedding2 = get_word_embedding(input2.split())
     # feature vector of 768 for each sentence
-    print('Vector similarity for similar meanings:  %.2f' % 1 - cosine(word_embedding1, word_embedding2))
+    print('Vector similarity for similar meanings:  %.2f' % (1 - cosine(word_embedding1, word_embedding2)))
