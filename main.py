@@ -63,7 +63,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--logging', action='store_true')
-    parser.add_argument('--default_reply_thres', required=True)
+    parser.add_argument('--default_reply_thres', type=float, required=True)
     args = parser.parse_args()
     if args.logging:
         logger.setLevel(logging.INFO)
