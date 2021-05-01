@@ -20,6 +20,18 @@ DEFAULT_REPLY = 3
 
 # database that contains Q&A
 database = read_database()
+orig2preprocessed_database = preprocessed_whole_database(database, get_preprocessed_text)
+
+def preprocessed_whole_database(database, get_preprocessed_text):
+    """
+    To return a preprocessed version of questions in the database
+    """
+    orig2preprocessed_database = {}
+    for submodule in database:
+        for question, _ in submodule.items():
+            orig2preprocessed_database[question] = get_preprocessed_text(question)
+
+    return orig2preprocessed_database
 
 def display_chatbot_reply(answer):
     """
@@ -29,7 +41,7 @@ def display_chatbot_reply(answer):
     reply += colored(answer,"green")
     print(reply)
 
-def similarity_matching(preprocessed_user_message, candidates_submodules, get_word_embedding_func, default_reply, default_reply_thres = 0.5):
+def similarity_matching(preprocessed_user_message, candidates_submodules, get_word_embedding_func, default_reply, orig2preprocessed_database, default_reply_thres):
     """Match the user message and the candidate questions in database after LDA clustering
        to find the most similar question and answer along with the type of submodule 
     """
@@ -42,7 +54,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
         for question, answer in candidate_questions.items():
             # the cosine formula in scipy is [1 - (u.v / (||u||*||v||))]
             # so we have to add 1 - consine() to become the similary match instead of difference match 
-            similarity = 1 - cosine(user_message_embedding, get_word_embedding_func(question))
+            similarity = 1 - cosine(user_message_embedding, get_word_embedding_func(orig2preprocessed_database[question]))
             if similarity > max_similarity:
                 max_similarity, max_question, max_answer, max_submodule = similarity, question, answer, submodule + 1
 
@@ -85,7 +97,7 @@ if __name__ == '__main__':
 
         # Similarity Matching 
         # can replace database to candidate_database after LDA + Clustering(TODO)
-        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"], default_reply_thres=args.default_reply_thres)
+        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"], orig2preprocessed_database, default_reply_thres=args.default_reply_thres)
 
         if matched_submodule == GENERAL_INTENT:
             # Entity Extraction 
