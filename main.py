@@ -64,7 +64,8 @@ if __name__ == '__main__':
         # TODO
 
         # Similarity Matching 
-        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, candidates_submodules[:2], get_word_embedding, database[2]["Default"])
+        # can replace database to candidate_database after LDA + Clustering
+        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"])
 
         if matched_submodule == GENERAL_INTENT:
             # Entity Extraction 
