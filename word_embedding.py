@@ -5,6 +5,11 @@ from scipy.spatial.distance import cosine
 # Load pre-trained model tokenizer (vocabulary)
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
+# Load pre-trained model (weights)
+model = BertModel.from_pretrained('bert-base-uncased',
+                                output_hidden_states = True, # Whether the model returns all hidden-states.
+                                )
+
 def get_word_embedding(preprocessed_text):
     """
     Refer to https://mccormickml.com/2019/05/14/BERT-word-embeddings-tutorial/
@@ -24,11 +29,6 @@ def get_word_embedding(preprocessed_text):
     # Convert inputs to PyTorch tensors
     tokens_tensor = torch.tensor([indexed_tokens])
     segments_tensors = torch.tensor([segments_ids])
-
-    # Load pre-trained model (weights)
-    model = BertModel.from_pretrained('bert-base-uncased',
-                                    output_hidden_states = True, # Whether the model returns all hidden-states.
-                                    )
 
     # Put the model in "evaluation" mode, meaning feed-forward operation.
     model.eval()
