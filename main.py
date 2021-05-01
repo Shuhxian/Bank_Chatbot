@@ -18,10 +18,6 @@ GENERAL_INTENT = 1
 FAQS = 2
 DEFAULT_REPLY = 3
 
-# database that contains Q&A
-database = read_database()
-orig2preprocessed_database = preprocessed_whole_database(database, get_preprocessed_text)
-
 def preprocessed_whole_database(database, get_preprocessed_text):
     """
     To return a preprocessed version of questions in the database
@@ -71,6 +67,9 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
     else:
         return DEFAULT_REPLY, default_reply["answer"]
 
+# database that contains Q&A
+database = read_database()
+orig2preprocessed_database = preprocessed_whole_database(database, get_preprocessed_text)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
