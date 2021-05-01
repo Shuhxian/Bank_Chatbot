@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 from entity_extraction import get_entities
 from text_preprocessing import get_corpus as get_preprocessed_text
 from database_extraction import read_database
-from lda import train_classifier, predict
 from word_embedding import get_word_embedding
 from scipy.spatial.distance import cosine
 
