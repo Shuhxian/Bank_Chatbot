@@ -45,10 +45,10 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
                 max_similarity, max_question, max_answer, max_submodule = similarity, question, answer, submodule + 1
 
 
-    logging.info("Highest Matched Submodule:", str(max_submodule))
-    logging.info("Highest Similarity Score:", str(max_similarity))
-    logging.info("Highest Confidence Level Question:", str(max_question))
-    logging.info("Highest Confidence Level Answer:", str(max_answer))
+    logging.info("Highest Matched Submodule: "+str(max_submodule))
+    logging.info("Highest Similarity Score: "+str(max_similarity))
+    logging.info("Highest Confidence Level Question: "+str(max_question))
+    logging.info("Highest Confidence Level Answer: "+str(max_answer))
 
     # if the highest similarity is lower the predefined threshold
     # default reply will be sent back to the user
@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
         # Text Preprocessing
         preprocessed_user_message = get_preprocessed_text(user_message)
-        logging.info("Preprocessed User Message:",str(preprocessed_user_message))
+        logging.info("Preprocessed User Message: "+str(preprocessed_user_message))
 
         # LDA + Clustering
         # TODO
@@ -87,7 +87,7 @@ if __name__ == '__main__':
         if matched_submodule == GENERAL_INTENT:
             # Entity Extraction 
             entities = get_entities(user_message)
-            logging.info("Entities Extracted:",str(entities))
+            logging.info("Entities Extracted: "+str(entities))
             highest_confid_lvl_ans = highest_confid_lvl_ans.replace("NAME", entities["PERSON"][0])
             highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", entities["BANK_ACC"][0])
             highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0])
