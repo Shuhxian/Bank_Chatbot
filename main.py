@@ -3,7 +3,7 @@ from termcolor import colored
 import logging
 import argparse
 
-logger = logging.getLogger('Developer Message')
+logger = logging.getLogger(__name__)
 
 # import other files
 from entity_extraction import get_entities
