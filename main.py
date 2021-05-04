@@ -116,7 +116,7 @@ if __name__ == '__main__':
                     # if there is no amount in user question, I assume that the user is asking to check his bank balance
                     if len(entities["AMOUNT"]) > 0:
                         highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0] )    
-                        highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", "RM"+entities["AMOUNT"][0] )
+                        highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0] )
 
                     else:
                         bank_balance = str(database[3][bank_acc]["amount"])
