@@ -12,7 +12,7 @@ import gensim
 
 from nltk import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
-from nltk.stem import LancasterStemmer, WordNetLemmatizer
+from nltk.stem import WordNetLemmatizer
 
 def replace_contractions(text):
     """Replace contractions in string of text"""
@@ -47,6 +47,7 @@ def get_corpus (data):
   data_words_nostops = remove_stopwords(data_words)
   # Do lemmatization in only verb
   data_lemmatized = lemmatization(data_words_nostops)   
-
+  if hi in data_lemmatized:
+    print('testing hi')
   op=np.asarray(data_lemmatized)
   return op
