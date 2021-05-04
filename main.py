@@ -10,6 +10,7 @@ from entity_extraction import get_entities
 from text_preprocessing import get_corpus as get_preprocessed_text
 from database_extraction import read_database
 from word_embedding import get_word_embedding
+from common_responses import get_common_answer
 from scipy.spatial.distance import cosine
 
 # submodule
@@ -86,6 +87,12 @@ if __name__ == '__main__':
         user_message = input()  
         if user_message == "q":
             break 
+
+        # Return fixed responses for common messages like: "Hi"
+        common_answer = get_common_answer(user_message)
+        if common_answer is not 'Response not found':
+            display_chatbot_reply(get_common_answer(user_message))
+            continue
 
         # Text Preprocessing
         preprocessed_user_message = get_preprocessed_text(user_message)
