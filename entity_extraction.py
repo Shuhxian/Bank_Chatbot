@@ -91,7 +91,7 @@ if __name__ == '__main__':
         return " ".join(re.split(r'[\n\t]+', soup.get_text()))
 
     ny_bb = url_to_string('https://www.theedgemarkets.com/article/bursa-malaysia-1q-net-profit-rm121m-rm65m-year-earlier')
-    test_string = 'Muhammad Zafi wants to deposit RM10 RM10.00 RM100,000.00 into my bank account 9990-6000-43141 99694039900 541421'
+    test_string = 'I want to deposit RM10 RM10.00 RM100,000.00 into my bank account 9990-6000-43141 99694039900 541421'
     entities_dict = get_entities(ny_bb)
     pprint(entities_dict)
     test_dict = get_entities(test_string)
