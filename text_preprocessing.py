@@ -43,10 +43,9 @@ def get_corpus (data):
   text=replace_contractions(data)
   data_words = sent_to_words(text)
   data_words = to_lowercase(data_words)
-  data_words = remove_punctuation(data_words)  
-  # Remove Stop Words
+  data_words = remove_punctuation(data_words) 
   data_words_nostops = remove_stopwords(data_words)
-  # Do lemmatization in only verb
   data_lemmatized = lemmatization(data_words_nostops)   
-  op=np.asarray(data_lemmatized)
+  output = [string for string in data_lemmatized if string != ""]
+  op=np.asarray(output)
   return op
