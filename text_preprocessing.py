@@ -47,7 +47,6 @@ def get_corpus (data):
   data_words_nostops = remove_stopwords(data_words)
   # Do lemmatization in only verb
   data_lemmatized = lemmatization(data_words_nostops)   
-  if 'hi' in data_lemmatized:
-    print('testing hi')
+  
   op=np.asarray(data_lemmatized)
   return op
