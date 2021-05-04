@@ -9,7 +9,7 @@ def get_common_answer(message):
     for key in message_answer_dict:
         if message.lower() in key:
             return message_answer_dict[key]['response']
-    return 'Response not found'
+    return None
 
 
 if __name__ == '__main__':
@@ -32,6 +32,8 @@ if __name__ == '__main__':
 
         # Return fixed responses for common messages like: "Hi"
         common_answer = get_common_answer(user_message)
-        if common_answer is not 'Response not found':
+        if common_answer:
             display_chatbot_reply(get_common_answer(user_message))
             continue
+
+        print('Do something else')
