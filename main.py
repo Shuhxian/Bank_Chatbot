@@ -57,6 +57,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
     logger.info("Highest Matched Submodule: "+str(max_submodule))
     logger.info("Highest Similarity Score: "+str(max_similarity))
     logger.info("Highest Confidence Level Question: "+str(max_question))
+    logger.info("Highest Confidence Level Preprocessed Question: "+str(orig2preprocessed_database[max_question]))
     logger.info("Highest Confidence Level Answer: "+str(max_answer))
 
     # if the highest similarity is lower the predefined threshold
