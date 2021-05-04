@@ -37,7 +37,7 @@ def display_chatbot_reply(answer):
     print(reply)
 
 def similarity_matching(preprocessed_user_message, candidates_submodules, get_word_embedding_func, default_reply, orig2preprocessed_database, default_reply_thres):
-    """Match the user message and the candidate questions in database after LDA clustering
+    """Match the user message and the candidate questions in database 
        to find the most similar question and answer along with the type of submodule 
     """
     user_message_embedding = get_word_embedding_func(preprocessed_user_message)
@@ -91,20 +91,16 @@ if __name__ == '__main__':
         preprocessed_user_message = get_preprocessed_text(user_message)
         logger.info("Preprocessed User Message: "+str(preprocessed_user_message))
 
-        # LDA + Clustering
-        # TODO
-
         # Similarity Matching 
-        # can replace database to candidate_database after LDA + Clustering(TODO)
         matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"], orig2preprocessed_database, default_reply_thres=args.default_reply_thres)
 
         if matched_submodule == GENERAL_INTENT:
             # Entity Extraction 
             entities = get_entities(user_message)
             logger.info("Entities Extracted: "+str(entities))
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0])
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", entities["BANK_ACC"][0])
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0])
+            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0] if len(entities["PERSON"]) > 0 else "PERSON")
+            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", entities["BANK_ACC"][0] if len(entities["BANK_ACC"]) > 0 else "BANK_ACC")
+            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0] if len(entities["AMOUNT"]) > 0 else "AMOUNT")
             display_chatbot_reply(highest_confid_lvl_ans)
 
         elif matched_submodule == FAQS:
