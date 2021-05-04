@@ -69,7 +69,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
 
 # database that contains Q&A
 database = read_database()
-orig2preprocessed_database = preprocessed_whole_database(database, get_preprocessed_text)
+orig2preprocessed_database = preprocessed_whole_database(database[:3], get_preprocessed_text)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
