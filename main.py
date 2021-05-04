@@ -29,6 +29,16 @@ def preprocessed_whole_database(database, get_preprocessed_text):
 
     return orig2preprocessed_database
 
+def get_batch_word_embedding(preprocessed_database, get_word_embedding):
+    """
+    To return a pre-calculated word embedding of the questions in the database
+    """
+    word_embedding_database = {}
+    for original_question, preprocessed_question in preprocessed_database.items():
+        word_embedding_database[original_question] = get_word_embedding(preprocessed_question)
+
+    return word_embedding_database
+    
 def display_chatbot_reply(answer):
     """
     Print the chatbot reply message in color 
@@ -37,8 +47,9 @@ def display_chatbot_reply(answer):
     reply += colored(answer,"green")
     print(reply)
 
-def similarity_matching(preprocessed_user_message, candidates_submodules, get_word_embedding_func, default_reply, orig2preprocessed_database, default_reply_thres):
-    """Match the user message and the candidate questions in database 
+def similarity_matching(preprocessed_user_message, candidates_submodules, get_word_embedding_func, default_reply, orig2preprocessed_database, word_embedding_database, default_reply_thres):
+    """
+    Match the user message and the candidate questions in database 
        to find the most similar question and answer along with the type of submodule 
     """
     user_message_embedding = get_word_embedding_func(preprocessed_user_message)
@@ -50,7 +61,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
         for question, answer in candidate_questions.items():
             # the cosine formula in scipy is [1 - (u.v / (||u||*||v||))]
             # so we have to add 1 - consine() to become the similary match instead of difference match 
-            similarity = 1 - cosine(user_message_embedding, get_word_embedding_func(orig2preprocessed_database[question]))
+            similarity = 1 - cosine(user_message_embedding, word_embedding_database[question])
             if similarity > max_similarity:
                 max_similarity, max_question, max_answer, max_submodule = similarity, question, answer, submodule + 1
 
@@ -71,6 +82,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
 # database that contains Q&A
 database = read_database()
 orig2preprocessed_database = preprocessed_whole_database(database[:3], get_preprocessed_text)
+word_embedding_database = get_batch_word_embedding(orig2preprocessed_database, get_word_embedding)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -99,7 +111,7 @@ if __name__ == '__main__':
         logger.info("Preprocessed User Message: "+str(preprocessed_user_message))
 
         # Similarity Matching 
-        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"], orig2preprocessed_database, default_reply_thres=0.85)
+        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"], orig2preprocessed_database, word_embedding_database, default_reply_thres=0.85)
 
         if matched_submodule == GENERAL_INTENT:
             # Entity Extraction 
