@@ -103,7 +103,7 @@ if __name__ == '__main__':
                 bank_acc = entities["BANK_ACC"][0]
 
                 # if the bank account is not found in the database, another message is returned
-                if bank_acc in database[3].keys():
+                if int(bank_acc) in database[3].keys():
                     highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0] )
                     highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", bank_acc)
                     
