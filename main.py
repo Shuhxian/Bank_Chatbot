@@ -90,7 +90,7 @@ if __name__ == '__main__':
 
         # Return fixed responses for common messages like: "Hi"
         common_answer = get_common_answer(user_message)
-        if common_answer is not 'Response not found':
+        if common_answer:
             display_chatbot_reply(get_common_answer(user_message))
             continue
 
