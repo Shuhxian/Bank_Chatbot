@@ -104,12 +104,13 @@ if __name__ == '__main__':
 
                 # if the bank account is not found in the database, another message is returned
                 if int(bank_acc) in database[3].keys():
-                    highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0] )
                     highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", bank_acc)
                     
                     # if there is no amount in user question, I assume that the user is asking to check his bank balance
                     if len(entities["AMOUNT"]) > 0:
+                        highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0] )    
                         highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0] )
+
                     else:
                         bank_balance = database[3][entities["BANK_ACC"][0]]["amount"]
                         highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", bank_balance)
