@@ -1,79 +1,52 @@
 # !python3 -c "import nltk; nltk.download('all')"
-
-import re
+# !pip install contractions
+import re, string
+import nltk
+import contractions
+import inflect
 import numpy as np
 import pandas as pd
-import nltk
-from nltk.stem import WordNetLemmatizer
-from nltk.corpus import wordnet
-from nltk.tokenize import word_tokenize
 
 # Gensim
 import gensim
-import gensim.corpora as corpora
-from gensim.utils import simple_preprocess
 
-# spacy for lemmatization
-import spacy
+from nltk import word_tokenize, sent_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 
-# df = pd.read_excel (r'/content/Database.xlsx')
-#df.columns = ['message', 'answer']
-# data = df.message.values.tolist() 
+def replace_contractions(text):
+    """Replace contractions in string of text"""
+    return contractions.fix(text)
 
-# Initialize spacy 'en' model, keeping only tagger component (for efficiency)
-# python3 -m spacy download en
-nlp = spacy.load('en', disable=['parser', 'ner'])
+def sent_to_words(text):
+    return(nltk.word_tokenize(text))
 
-#tokenize each sentence into a list of words, removing punctuations and unnecessary characters
-def sent_to_words(sentences):
-    return([word_tokenize(sentence) for sentence in sentences])
+def to_lowercase(words):
+    new_words = []
+    """Convert all characters to lowercase from list of tokenized words"""
+    return [new_words.append(word.lower()) for word in words]
 
-# Define functions for stopwords, bigrams, trigrams and lemmatization
-# remove stopwords and tokenizing
-def remove_stopwords(texts):
-    stop_words = set(nltk.corpus.stopwords.words("english"))
-    return [[word for word in simple_preprocess(str(doc),min_len=0) if word not in stop_words] for doc in texts]
+def remove_punctuation(words):
+    """Remove punctuation from list of tokenized words"""
+    new_words = []
+    return [new_words.append(re.sub(r'[^\w\s]', '', word)) for word in words]
 
-def make_bigrams(texts):
-# Build the bigram and trigram models
-    bigram = gensim.models.Phrases(texts, min_count=5, threshold=100) # higher threshold fewer phrases.
-    bigram_mod = gensim.models.phrases.Phraser(bigram)
-    return [bigram_mod[doc] for doc in texts]
-
-def make_trigrams(texts):
-    trigram = gensim.models.Phrases(bigram[texts], threshold=100)  
-    trigram_mod = gensim.models.phrases.Phraser(trigram)
-    return [trigram_mod[bigram_mod[doc]] for doc in texts]
-
-def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
+def remove_stopwords(words):
+    """Remove stop words from list of tokenized words"""
+    return [word for word in words if not word in stopwords.words('english')]
+    
+def lemmatization(words):
+    """Lemmatize verbs in list of tokenized words"""
     lemmatizer = WordNetLemmatizer()
-    texts_out = []
-    for sent in texts:
-        doc = nlp(" ".join(sent)) 
-        texts_out.append([token.lemma_ for token in doc if token.pos_ in allowed_postags])
-    return texts_out
-
+    return [(lemmatizer.lemmatize(word, pos='v')) for word in words]
+   
 def get_corpus (data):
-  data=list(data.split('         '))
-  data_words = list(sent_to_words(data))  
+  text=replace_contractions(data)
+  data_words = sent_to_words(text)
   # Remove Stop Words
   data_words_nostops = remove_stopwords(data_words)
-  # Form Bigrams
-  data_words_bigrams = make_bigrams(data_words_nostops)
-
-  # Do lemmatization keeping only noun, adj, vb, adv
-  data_lemmatized = lemmatization(data_words_bigrams, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV'])   
-
-  # Create Dictionary
-  id2word = corpora.Dictionary(data_lemmatized)
-
-  # Create Corpus
-  texts = data_lemmatized
-
-  # Term Document Frequency
-  corpus = [id2word.doc2bow(text) for text in texts]
-
-  #(testing) Human readable format of corpus (term-frequency)
-#   [[(id2word[id], freq) for id, freq in cp] for cp in corpus[:4]]
-  op=np.asarray(data_lemmatized[0])
+  # Do lemmatization in only verb
+  data_lemmatized = lemmatization(data_words_nostops)   
+  
+  op=np.asarray(data_lemmatized)
   return op
