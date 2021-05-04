@@ -92,41 +92,38 @@ if __name__ == '__main__':
         logger.info("Preprocessed User Message: "+str(preprocessed_user_message))
 
         # Similarity Matching 
-        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"], orig2preprocessed_database, default_reply_thres=args.default_reply_thres)
+        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"], orig2preprocessed_database, default_reply_thres=0.85)
 
         if matched_submodule == GENERAL_INTENT:
             # Entity Extraction 
             entities = get_entities(user_message)
             logger.info("Entities Extracted: "+str(entities))
 
-            try:
-                bank_acc = entities["BANK_ACC"][0]
 
-                # if the bank account is not found in the database, another message is returned
-                if int(bank_acc) in database[3].keys():
-                    highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", bank_acc)
-                    
-                    # if there is no amount in user question, I assume that the user is asking to check his bank balance
-                    if len(entities["AMOUNT"]) > 0:
-                        highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0] )    
-                        highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0] )
+            bank_acc = int(entities["BANK_ACC"][0])
 
-                    else:
-                        bank_balance = database[3][entities["BANK_ACC"][0]]["amount"]
-                        highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", bank_balance)
+            # if the bank account is not found in the database, another message is returned
+            if bank_acc in database[3].keys():
+                highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", str(bank_acc))
+                
+                # if there is no amount in user question, I assume that the user is asking to check his bank balance
+                if len(entities["AMOUNT"]) > 0:
+                    highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0] )    
+                    highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0] )
+
                 else:
-                    highest_confid_lvl_ans = f"{bank_acc} bank account not found."
+                    bank_balance = str(database[3][bank_acc]["amount"])
+                    highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", bank_balance)
+            else:
+                highest_confid_lvl_ans = f"{bank_acc} bank account not found."
 
-                display_chatbot_reply(highest_confid_lvl_ans)
+            display_chatbot_reply(highest_confid_lvl_ans)
 
-            except:
-                display_chatbot_reply("Some essential information is missing.")
 
         elif matched_submodule == FAQS:
             display_chatbot_reply(highest_confid_lvl_ans)
 
         elif matched_submodule == DEFAULT_REPLY:
             display_chatbot_reply(highest_confid_lvl_ans)
-
     # End of Chatbot
     display_chatbot_reply("Thank you for using our chatbot.")
