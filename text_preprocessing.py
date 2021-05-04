@@ -1,5 +1,5 @@
-# !python3 -c "import nltk; nltk.download('all')"
-# !pip install contractions
+!python3 -c "import nltk; nltk.download('all')"
+!pip install contractions
 import re, string
 import nltk
 import contractions
