@@ -114,7 +114,7 @@ if __name__ == '__main__':
                         bank_balance = database[3][entities["BANK_ACC"][0]]["amount"]
                         highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", bank_balance)
                 else:
-                    highest_confid_lvl_ans = f"{bank_acc} not found."
+                    highest_confid_lvl_ans = f"{bank_acc} bank account not found."
 
                 display_chatbot_reply(highest_confid_lvl_ans)
 
