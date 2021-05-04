@@ -56,7 +56,7 @@ def similarity_matching(preprocessed_user_message, candidates_submodules, get_wo
 
     logger.info("Highest Matched Submodule: "+str(max_submodule))
     logger.info("Highest Similarity Score: "+str(max_similarity))
-    logger.info("Highest Confidence Level Question: "+str(max_question))
+    logger.info("Highest Confidence Level Question: "+str(max_question["answer"]))
     logger.info("Highest Confidence Level Preprocessed Question: "+str(orig2preprocessed_database[max_question]))
     logger.info("Highest Confidence Level Answer: "+str(max_answer))
 
@@ -98,10 +98,28 @@ if __name__ == '__main__':
             # Entity Extraction 
             entities = get_entities(user_message)
             logger.info("Entities Extracted: "+str(entities))
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0] if len(entities["PERSON"]) > 0 else "PERSON")
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", entities["BANK_ACC"][0] if len(entities["BANK_ACC"]) > 0 else "BANK_ACC")
-            highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0] if len(entities["AMOUNT"]) > 0 else "AMOUNT")
-            display_chatbot_reply(highest_confid_lvl_ans)
+
+            try:
+                bank_acc = entities["BANK_ACC"][0]
+
+                # if the bank account is not found in the database, another message is returned
+                if bank_acc in database[3].keys():
+                    highest_confid_lvl_ans = highest_confid_lvl_ans.replace("PERSON", entities["PERSON"][0] )
+                    highest_confid_lvl_ans = highest_confid_lvl_ans.replace("BANK_ACC", bank_acc)
+                    
+                    # if there is no amount in user question, I assume that the user is asking to check his bank balance
+                    if len(entities["AMOUNT"]) > 0:
+                        highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", entities["AMOUNT"][0] )
+                    else:
+                        bank_balance = database[3][entities["BANK_ACC"][0]]["amount"]
+                        highest_confid_lvl_ans = highest_confid_lvl_ans.replace("AMOUNT", bank_balance)
+                else:
+                    highest_confid_lvl_ans = f"{bank_acc} not found."
+
+                display_chatbot_reply(highest_confid_lvl_ans)
+
+            except:
+                display_chatbot_reply("Some essential information is missing.")
 
         elif matched_submodule == FAQS:
             display_chatbot_reply(highest_confid_lvl_ans)
