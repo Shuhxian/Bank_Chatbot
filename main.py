@@ -111,7 +111,7 @@ if __name__ == '__main__':
         logger.info("Preprocessed User Message: "+str(preprocessed_user_message))
 
         # Similarity Matching 
-        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"], orig2preprocessed_database, word_embedding_database, default_reply_thres=0.85)
+        matched_submodule, highest_confid_lvl_ans = similarity_matching(preprocessed_user_message, database[:2], get_word_embedding, database[2]["Default"], orig2preprocessed_database, word_embedding_database, default_reply_thres=args.default_reply_thres)
 
         if matched_submodule == GENERAL_INTENT:
             # Entity Extraction 
